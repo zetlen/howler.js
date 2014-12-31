@@ -1005,20 +1005,22 @@
      * @return {Number} The existing rate, or the new rate.
      */
     scrub: function(id, rate) {
-      var sound;
+      var self = this,
+          sound;
       if (arguments.length === 0) {
-        return this._rate;
+        return self._rate;
       }
       sound = id ? self._soundById(id) : self._sounds[0];
 
       if (arguments.length === 1) {
-        if (this._webAudio) {
-          return sound._node.bufferSource.playbackRate.value;
+        if (self._webAudio) {
+          return sound._node.bufferSource ? sound._node.bufferSource.playbackRate.value : self._rate;
         }
         return sound._node.playbackRate; 
       }
 
-      if (this._webAudio) {
+      self._rate = rate;
+      if (self._webAudio) {
         sound._node.bufferSource.playbackRate.value = rate;
       } else {
         sound._node.playbackRate = rate;
