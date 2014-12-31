@@ -999,6 +999,36 @@
     },
 
     /**
+     * Set the playback rate of a sound.
+     * @param {Number} id The sound ID to check or update.
+     * @param {Number} [rate] The new rate. Can be positive or negative. 1 is normal speed.
+     * @return {Number} The existing rate, or the new rate.
+     */
+    scrub: function(id, rate) {
+      var sound;
+      if (arguments.length === 0) {
+        return this._rate;
+      }
+      sound = id ? self._soundById(id) : self._sounds[0];
+
+      if (arguments.length === 1) {
+        if (this._webAudio) {
+          return sound._node.bufferSource.playbackRate.value;
+        }
+        return sound._node.playbackRate; 
+      }
+
+      if (this._webAudio) {
+        sound._node.bufferSource.playbackRate.value = rate;
+      } else {
+        sound._node.playbackRate = rate;
+      }
+
+      return rate;
+
+    },
+
+    /**
      * Check if a specific sound is currently playing or not.
      * @param  {Number} id The sound id to check. If none is passed, first sound is used.
      * @return {Boolean}    True if playing and false if not.
